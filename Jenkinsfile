@@ -43,5 +43,33 @@ pipeline{
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
+        stage("Docker Build & tag"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
+                       sh "make image"
+                    }
+                }
+            }
+        }
+        stage("TRIVY"){
+            steps{
+                sh "trivy image dinesh1097/dotnet-monitoring:latest > trivy.txt"
+            }
+        }
+        stage("Docker Push"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
+                       sh "make push"
+                    }
+                }
+            }
+        }
+        stage("Deploy to container"){
+            steps{
+                sh "docker run -d --name dotnet -p 5000:5000 dinesh1097/dotnet-monitoring:latest"
+            }
+        }
     }
 }
