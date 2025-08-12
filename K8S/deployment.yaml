@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: dotnet-app-deployment
 spec:
-  replicas: 1 # Set the desired number of replicas
+  replicas: 2 # Set the desired number of replicas
   selector:
     matchLabels:
       app: dotnet-app
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: dotnet-app
-          image: sevenajay/dotnet-monitoring:latest # Replace with your Docker image name
+          image: dinesh1097/dotnet-app:latest # Replace with your Docker image name
           ports:
             - containerPort: 5000 # Expose the port specified in your Dockerfile
 
